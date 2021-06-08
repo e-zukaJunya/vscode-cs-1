@@ -1,33 +1,35 @@
-﻿using System;
+﻿using BatchCommon;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
-namespace vscode_cs_1
+namespace StepA2
 {
     class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// サンプルバッチ
+        /// </summary>
+        /// <param name="args">引数</param>
+        /// <returns>なし</returns>
+        static async Task Main(string[] args)
         {
-        IServiceCollection services = new ServiceCollection();
-        // Startup.cs finally :)
-        Startup startup = new Startup();
-        startup.ConfigureServices(services);
-        IServiceProvider serviceProvider = services.BuildServiceProvider();
+            //DIコンテナのセットアップ
+            using IHost host = Startup.CreateHostBuilder(args).Build();
 
-        //configure console logging
-        // serviceProvider
-        //     .GetService<ILoggerFactory>().CreateLogger();
+            //必要なサービスの取得
+            var mainService = host.Services.GetRequiredService<IStepA2Service>();
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
-        var logger = serviceProvider.GetService<ILoggerFactory>()
-            .CreateLogger<Program>();
+            //実際のメイン処理の実行
+            mainService.Main();
 
-        logger.LogDebug("Logger is working!");
-        logger.LogInformation("Info log!");
-        logger.LogError("Error log!");
+            //ログ試し
+            logger.LogInformation("呼び出し元！");
 
-        // Get Service and call method
-        var service = serviceProvider.GetService<IMyService>();
-        service.MyServiceMethod();
+            //最後に毎回書く
+            await host.RunAsync();
         }
     }
 }

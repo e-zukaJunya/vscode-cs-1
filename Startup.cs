@@ -1,31 +1,24 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
-public class Startup
+namespace BatchCommon
 {
-    IConfigurationRoot Configuration { get; }
-
-    public Startup()
+    public static class Startup
     {
-        var builder = new ConfigurationBuilder();
-
-        Configuration = builder.Build();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((_, services) =>
+                {
+                    //外部ファイルの値や環境変数の取得
+                    var Configuration = new ConfigurationBuilder()
+                            .AddEnvironmentVariables()
+                            .Build();
+                    services.Configure<Settings>(Configuration);
+                    //サービスの登録
+                    services.AddSingleton<IStepA2Service, StepA2Service>();
+                });
     }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddLogging();
-        services.AddSingleton<IConfigurationRoot>(Configuration);
-        services.AddSingleton<IMyService, MyService>();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureLogging(logging =>
-        {
-            logging.ClearProviders();
-            logging.AddConsole();
-        });
 }
