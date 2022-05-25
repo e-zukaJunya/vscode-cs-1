@@ -1,0 +1,18 @@
+# NOTE: Requires **VS2019 16.3** or later
+
+# Rules for ConsoleApp
+# Description: Code analysis rules for ConsoleApp.csproj.
+
+# Code files
+[*.{cs,vb}]
+
+
+dotnet_diagnostic.CA1001.severity = warning
+
+dotnet_diagnostic.CA1821.severity = warning
+
+dotnet_diagnostic.CA2213.severity = warning
+
+dotnet_diagnostic.CA2231.severity = warning
+# IDE0007: 暗黙的な型の使用
+dotnet_diagnostic.IDE0007.severity = error

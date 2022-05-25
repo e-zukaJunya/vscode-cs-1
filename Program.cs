@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StepA2
@@ -28,8 +30,15 @@ namespace StepA2
             //ログ試し
             logger.LogInformation("呼び出し元！");
 
+            var a = new List<string>() { "Hello","World"};
+            // List<string> a = new List<string>() { "Hello","World"};
+            var b = a.ToArray();
+            for (var f = 1;f < b.Length;f++) {
+                Console.WriteLine(value: b[f].ToString());
+            }
             //最後に毎回書く
             await host.RunAsync();
+            return;
         }
     }
 }
